@@ -19,8 +19,6 @@ float outVoltage = 0; // brightness
 
 // Time Variables 
 unsigned long modeTime = 0; // time in a given mode during wave and binary
-unsigned long offTime = -100; // time LEDs are off during blink
-unsigned long onTime = -100; // time LEDs are on during blink
 unsigned long lastDebounceTime = 0; // time since button last changed
 
 // Delays
@@ -73,13 +71,7 @@ void resetMode() {
   
   // start in default mode for wave and binary
   modeTime = 0;
-  countMode = 0;
-  
-  // if the mode is blink, reset the values for on and off time
-  if(mode == 2) {
-   offTime = -100;
-   onTime = -100; 
-  }  
+  countMode = 0; 
 }
 
 // runs the appropriate function given the mode
@@ -123,46 +115,17 @@ void turnAllOff() {
 
 // This method blinks all of the lights
 void blinkAll(){
-  // Default State
-  if (offTime == -100 && onTime == -100){
-    // if both counters are off
-    
-    offTime = millis(); // start counting the time spent in off state
-    turnAllOff(); 
-  }
-  // Off State has Ended (Begin On State)
-  if (offTime != -100 && millis() - offTime > blinkDelay) { 
-    // if offTime counter has started and expired
-    
-    onTime = millis(); // begin onTime counter
-    turnAllOn(); 
-    offTime = -100; // turn off off time counter
-  }
-  // On State has Ended (Begin default)
-  if (onTime != -100 && millis() - onTime > blinkDelay){
-    // if the onTime counter has started and expired
-    
-    turnAllOff();
-    
-    // turn off both counters
-    offTime = -100; 
-    onTime = -100;
-  }
-  
-  /* Try this:
-  
   if(millis() - modeTime > blinkDelay) {
      modeTime = millis();
      
-     if(modeCount == 0) {
+     if(countMode == 0) {
         turnAllOff(); 
      } else {
        turnAllOn();
      }
      
-     modeCount = (modeCount+1)%2;
+     countMode = (countMode+1)%2;
   }  
-  */
 }
 
 // This method blinks all the lights sequentially
